@@ -122,13 +122,13 @@ namespace detail {
                         m_tokenBuffer.push_back( { TokenType::Option, next.substr( 0, delimiterPos ) } );
                         m_tokenBuffer.push_back( { TokenType::Argument, next.substr( delimiterPos + 1 ) } );
                     } else {
-                        if( next[1] != '-' && next.size() > 2 ) {
+                        /*if( next[1] != '-' && next.size() > 2 ) {
                             std::string opt = "- ";
                             for( size_t i = 1; i < next.size(); ++i ) {
                                 opt[1] = next[i];
                                 m_tokenBuffer.push_back( { TokenType::Option, opt } );
                             }
-                        } else {
+                        } else*/ {
                             m_tokenBuffer.push_back( { TokenType::Option, next } );
                         }
                     }
@@ -162,9 +162,9 @@ namespace detail {
         }
 
         auto operator++() -> TokenStream & {
-            if( m_tokenBuffer.size() >= 2 ) {
+            /*if( m_tokenBuffer.size() >= 2 ) {
                 m_tokenBuffer.erase( m_tokenBuffer.begin() );
-            } else {
+            } else*/ {
                 if( it != itEnd )
                     ++it;
                 loadBuffer();
@@ -878,8 +878,10 @@ namespace detail {
 
                 if( result.value().type() == ParseResultType::ShortCircuitAll )
                     return result;
-                if( !tokenParsed )
-                    return InternalParseResult::runtimeError( "Unrecognised token: " + result.value().remainingTokens()->token );
+                if( !tokenParsed ) {
+                  // Accept to ignore unmatched params
+                  result = InternalParseResult::ok( ParseState( ParseResultType::NoMatch, ++result.value().remainingTokens() ) );
+                }
             }
             // !TBD Check missing required options
             return result;
