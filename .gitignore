@@ -11,3 +11,4 @@ cmake-build-*
 .idea/markdown-navigator.xml
 .idea/codeStyles/Project.xml
 .idea/markdown-navigator/profiles_settings.xml
+/build
